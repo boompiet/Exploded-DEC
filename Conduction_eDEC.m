@@ -102,8 +102,8 @@ face_thic       = 10^-3*ones(vcmplx(3).num(3).val,1)./omega(cnt1:cnt2);
 % -------------------------------------------------------------------------
 disp('>> build extended DEC geometric operators'); 
 vcmplx = dgeo_mod(vcmplx,face_thic,node_edge_area,node_vol);
-%vcmplx(1).dvol_mod=vcmplx(1).dvol; vcmplx(2).dvol_mod=vcmplx(2).dvol;
-%vcmplx(3).dvol_mod=vcmplx(3).dvol; vcmplx(4).dvol_mod=vcmplx(4).dvol;
+% vcmplx(1).dvol_mod=vcmplx(1).dvol; vcmplx(2).dvol_mod=vcmplx(2).dvol;
+% vcmplx(3).dvol_mod=vcmplx(3).dvol; vcmplx(4).dvol_mod=vcmplx(4).dvol;
 [star1,star2] = dvgeo(vcmplx);
 % diagonal matrix of geometric Hodge stars
 ibs1 = spdiags(1./star1,0,length(star1),length(star1));
@@ -160,8 +160,13 @@ t_old = zeros(fcmplx(1).num(1).val,1); t_old(z==max_z) = 1;
 % -------------------------------------------------------------------------
 % integrate forward in time
 % -------------------------------------------------------------------------
-n = 30;              % number of time steps
-h = 0.05;            % Time step size 
+% ***NOTE: a very large single time step will give the steady state
+%          solution
+% ***NOTE: if the cell complex is not well centered (which is often the
+%          case), then small time steps may lead to unstable solutions. In
+%          this case, the solution will blow up and not be valid
+n = 1;              % number of time steps
+h = 10^16;          % Time step size 
 
 figure;
 AI = speye(size(A(int_indx,int_indx)));

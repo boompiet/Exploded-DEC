@@ -31,8 +31,15 @@ for i=1:vcmplx(2).num(2).val
         sgn = sign(dot(vcmplx(2).bndop(1).sgn(i,j)*...
             (vcmplx(1).cc(k,:)-vcmplx(2).cc(i,:)),vcmplx(2).dir(i,:)));
         
-        star2(cnt,1) = sgn*vcmplx(2).dvol_mod(i)...      % Delaunary face area
-            ./norm(vcmplx(1).cc(k,:)-vcmplx(2).cc(i,:)); % Vornoi node -> edge length
+        % *** Uncommenting this code will improve stability of time
+        %     integration, but will eliminate the interaction between
+        %     non-well-centered cells in the extended complex
+        % if sgn<0
+        %     star2(cnt,1) = 0;
+        % else
+            star2(cnt,1) = sgn*vcmplx(2).dvol_mod(i)...      % Delaunary face area
+                ./norm(vcmplx(1).cc(k,:)-vcmplx(2).cc(i,:)); % Vornoi node -> edge length
+        % end
     end
 end
 
@@ -44,8 +51,15 @@ for i=1:vcmplx(3).num(3).val
         sgn = sign(dot((vcmplx(2).cc(k,:)-vcmplx(3).cc(i,:)),...
             (vcmplx(2).cc(k,:)-vcmplx(3).bc(i,:)) ))./2;
         
-        star2(cnt,1) = sgn*vcmplx(3).dvol_mod(i)*vcmplx(2).vvol(k)... % Mixed Delaunay edge / Voronoi edge area
-            ./norm(vcmplx(2).cc(k,:)-vcmplx(3).cc(i,:));              % Vornoi edge -> face length
+        % *** Uncommenting this code will improve stability of time
+        %     integration, but will eliminate the interaction between
+        %     non-well-centered cells in the extended complex
+        % if sgn<0
+        %     star2(cnt,1) = 0;
+        % else
+            star2(cnt,1) = sgn*vcmplx(3).dvol_mod(i)*vcmplx(2).vvol(k)... % Mixed Delaunay edge / Voronoi edge area
+                ./norm(vcmplx(2).cc(k,:)-vcmplx(3).cc(i,:));              % Vornoi edge -> face length
+        % end
     end
 end
 
@@ -57,8 +71,15 @@ for i=1:vcmplx(4).num(4).val
         sgn = sign(dot((vcmplx(3).cc(k,:)-vcmplx(4).cc(i,:)),...
             (vcmplx(3).cc(k,:)-vcmplx(4).bc(i,:)) ));
         
-        star2(cnt,1) = sgn*vcmplx(3).vvol(k)...          % Voronoi face area
-            ./norm(vcmplx(3).cc(k,:)-vcmplx(4).cc(i,:)); % Vornoi face -> volume length
+        % *** Uncommenting this code will improve stability of time
+        %     integration, but will eliminate the interaction between
+        %     non-well-centered cells in the extended complex
+        % if sgn<0
+        %     star2(cnt,1) = 0;
+        % else
+            star2(cnt,1) = sgn*vcmplx(3).vvol(k)...          % Voronoi face area
+                ./norm(vcmplx(3).cc(k,:)-vcmplx(4).cc(i,:)); % Vornoi face -> volume length
+        % end
     end
 end
 

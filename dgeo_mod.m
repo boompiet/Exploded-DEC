@@ -48,17 +48,16 @@ cmplx(2).dvol_mod = zeros(cmplx(2).num(2).val,1);
 for i=1:cmplx(2).num(2).val
     % area is the sum of triangles partitions (face,edge,vertex)
     % circumcenters
-    for j=1:cmplx(2).num(3).val(i)
-        k = cmplx(2).bndop(3).indx(i,j);
-        d = norm(cmplx(2).cc(i,:) - cmplx(3).cc(k,:));
-        sgn = sign(dot(cmplx(2).cc(i,:) - cmplx(3).cc(k,:),...
-            cmplx(2).cc(i,:) - cmplx(3).bc(k,:)));
+    if cmplx(2).dvol(i)~=0
+        for j=1:cmplx(2).num(3).val(i)
+            k = cmplx(2).bndop(3).indx(i,j);
+            d = norm(cmplx(2).cc(i,:) - cmplx(3).cc(k,:));
+            sgn = sign(dot(cmplx(2).cc(i,:) - cmplx(3).cc(k,:),...
+                cmplx(2).cc(i,:) - cmplx(3).bc(k,:)));
 
-        if cmplx(2).dvol(i)~=0
             cmplx(2).dvol_mod(i) = cmplx(2).dvol_mod(i) + ...
                 2/pi*(min(abs(cmplx(2).dvol(i)),node_edge_area(i))./...
-                max(abs(cmplx(2).dvol(i)),10^-16))^(1/2)*...
-                d*sgn*cmplx(3).dvol_mod(k);
+                abs(cmplx(2).dvol(i)))^(1/2)*d*sgn*cmplx(3).dvol_mod(k);
         end
     end
 end
@@ -72,18 +71,19 @@ cmplx(1).dvol_mod = zeros(cmplx(1).num(1).val,1);
 for i=1:cmplx(1).num(1).val
     % volume is the sum of hexahedron partitions (tet,face,edge,vertex)
     % circumcenters
-    for j=1:cmplx(1).num(2).val(i)
-        k = cmplx(1).bndop(2).indx(i,j);
-        d = norm(cmplx(1).cc(i,:) - cmplx(2).cc(k,:));
-        sgn = sign(dot(cmplx(1).cc(i,:) - cmplx(2).cc(k,:),...
-            cmplx(1).cc(i,:) - cmplx(2).bc(k,:)));
+    if cmplx(1).dvol(i) ~= 0
+        for j=1:cmplx(1).num(2).val(i)
+            k = cmplx(1).bndop(2).indx(i,j);
+            d = norm(cmplx(1).cc(i,:) - cmplx(2).cc(k,:));
+            sgn = sign(dot(cmplx(1).cc(i,:) - cmplx(2).cc(k,:),...
+                cmplx(1).cc(i,:) - cmplx(2).bc(k,:)));
 
-        if cmplx(1).dvol(i) ~= 0
             cmplx(1).dvol_mod(i) = cmplx(1).dvol_mod(i) + ...
                 2/pi*(min(abs(cmplx(1).dvol(i)),node_vol(i))./...
-                max(abs(cmplx(1).dvol(i)),10^-16))^(1/3)*...
-                d*sgn*cmplx(2).dvol_mod(k);
+                abs(cmplx(1).dvol(i)))^(1/3)*d*sgn*cmplx(2).dvol_mod(k);
         end
+    else
+        disp('----')
     end
 end
 
